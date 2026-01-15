@@ -1,4 +1,4 @@
-package com.example.management_system.modules.candidate;
+package com.example.management_system.candidate;
 
 import java.time.LocalDateTime;
 
@@ -14,20 +14,21 @@ import lombok.Data;
 
 @Data
 @Entity(name = "candidate")
-public class Candidate {
+public class CandidateEntity {
     
     @Id
     @Pattern(regexp = "([0-9]{2}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[\\/]?[0-9]{4}[-]?[0-9]{2})|([0-9]{3}[\\.]?[0-9]{3}[\\.]?[0-9]{3}[-]?[0-9]{2})", message = "CPF inválido. Digite um CPF no formato: 'xxx.xxx.xxx-xx' ou 'xxx.xxx.xxx/xxxx-xx'")
-    @NotBlank
     private String CPF;
     
     @NotBlank
     @Pattern(regexp = "^[a-zA-Z ]+$", message = "O nome deve conter apenas letras e espaços")
     private String name;
     
+    @NotBlank
     @Email(message = "Email inválido. Digite um email válido no formato: 'nome@domínio.com'")
     private String email;
 
+    @NotBlank
     @Length(min = 8, max = 16, message = "A senha deve ter entre 8 e 16 caracteres")
     private String password;
     private String description;
