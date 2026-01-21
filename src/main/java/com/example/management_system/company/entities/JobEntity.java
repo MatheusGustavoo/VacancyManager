@@ -10,7 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 @Data
@@ -19,6 +19,8 @@ public class JobEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
+
+    @NotBlank(message = "Este item é obrigatório")
     private String level;
     private String benefits;
     private String requirements;
