@@ -7,5 +7,5 @@ import lombok.Data;
 @AllArgsConstructor
 public class AuthCompanyDTO {
     private String password;
-    private String CNPJ;
+    private String Cnpj;
 }

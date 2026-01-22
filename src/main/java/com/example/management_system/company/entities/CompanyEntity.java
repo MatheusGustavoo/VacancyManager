@@ -3,8 +3,8 @@ package com.example.management_system.company.entities;
 import java.time.LocalDateTime;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.validator.constraints.Length;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
@@ -15,23 +15,27 @@ import lombok.Data;
 @Data
 @Entity(name = "company")
 public class CompanyEntity {
-    @Id
-    private String CNPJ;
 
-    @NotBlank
-    @Pattern(regexp = "^[a-zA-Z ]+$", message = "O nome deve conter apenas letras e espaços")
-    private String name;  
-    
-    @Email(message = "Email inválido. Digite um email válido no formato: 'nome@domínio.com'")
+    @Id
+    @Column(name = "cnpj", nullable = false, length = 14)
+    @NotBlank(message = "Preencha o CNPJ")
+    private String cnpj;
+
+    @NotBlank(message = "O nome é obrigatório")
+    @Pattern(regexp = "^[a-zA-Z ]+$", message = "O nome deve conter apenas letras e espaços")
+    private String name;
+
+    @NotBlank(message = "O email é obrigatório")
+    @Email(message = "Email inválido")
     private String email;
 
-    @Length(min = 8, max = 16, message = "A senha deve ter entre 8 e 16 caracteres")
+    @NotBlank(message = "A senha é obrigatória")
     private String password;
 
-    private String website;   
-    private String description;   
-    
-    @CreationTimestamp
-    private LocalDateTime createdAt;   
-}
+    private String website;
+    private String description;
 
+    @CreationTimestamp
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+}

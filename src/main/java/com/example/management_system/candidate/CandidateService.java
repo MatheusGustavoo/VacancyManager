@@ -9,9 +9,16 @@ public class CandidateService {
     private CandidateRepository repository;
 
     public CandidateEntity create(CandidateEntity candidate) {
-        this.repository.findByCPFOrEmail(candidate.getCPF(), candidate.getEmail()).ifPresent(user->{
-            throw new RuntimeException("Email ou CPF ja existe");
-        });
-        return this.repository.save(candidate);
+
+    if (repository.findByCPF(candidate.getCPF()).isPresent()) {
+        throw new RuntimeException("CPF já existe");
     }
+
+    if (repository.findByEmail(candidate.getEmail()).isPresent()) {
+        throw new RuntimeException("Email já existe");
+    }
+
+    return repository.save(candidate);
+}
+
 }

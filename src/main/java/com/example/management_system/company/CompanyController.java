@@ -1,18 +1,24 @@
 package com.example.management_system.company;
+import java.util.UUID;
+
 import javax.security.sasl.AuthenticationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.management_system.company.DTO.AuthCompanyDTO;
+import com.example.management_system.company.DTO.CreateJobDTO;
 import com.example.management_system.company.Services.CompanyService;
 import com.example.management_system.company.Services.JobService;
 import com.example.management_system.company.entities.CompanyEntity;
 import com.example.management_system.company.entities.JobEntity;
+
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
@@ -38,9 +44,12 @@ public class CompanyController {
     }
 
     @PostMapping("/job")
-    public ResponseEntity<Object> create(@Valid @RequestBody JobEntity job) {
+    public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO job, HttpServletRequest request) {
         try {
-            var result = this.jobService.create(job);
+            var id = request.getAttribute("company");
+            var jobEntity = JobEntity.builder().benefits(job.getBenefit()).level(job.getLevel()).description(job.getDescrpition()).companyCnpj(id.toString()).build();
+
+            var result = this.jobService.create(jobEntity);
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -57,7 +66,7 @@ public class CompanyController {
         try{
             var result = this.companyService.execute(authCompanyDTO);
             return ResponseEntity.ok().body(result);
-        }catch(AuthenticationException e){
+        }catch( UsernameNotFoundException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());
         }
 
