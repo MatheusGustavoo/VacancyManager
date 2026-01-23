@@ -27,7 +27,7 @@ public class CompanyService {
   public CompanyEntity create(CompanyEntity company) {
     try {
       repository.findByCnpj(company.getCnpj())
-          .ifPresent(c -> { throw new RuntimeException("Company already exists"); });
+          .ifPresent(c -> { throw new RuntimeException("CNPJ já cadastrado"); });
 
       company.setPassword(passwordEncoder.encode(company.getPassword()));
       return repository.save(company);
@@ -45,16 +45,16 @@ public class CompanyService {
 
 
 
- public String execute(AuthCompanyDTO dto) {
+ public String auth(AuthCompanyDTO dto) {
     System.out.println(dto.getCnpj() + " " + dto.getPassword());
     var company = repository.findByCnpj(dto.getCnpj())
-        .orElseThrow(() -> new UsernameNotFoundException("Company not found"));
+        .orElseThrow(() -> new UsernameNotFoundException("Empresa nao encontrada"));
 
     if (!passwordEncoder.matches(dto.getPassword(), company.getPassword())) {
-        throw new org.springframework.security.authentication.BadCredentialsException("Invalid credentials");
+        throw new org.springframework.security.authentication.BadCredentialsException("Credenciais inválidas");
     }
 
-    var algorithm = Algorithm.HMAC256(key); // garantir que key não é null
+    var algorithm = Algorithm.HMAC256(key); 
     return JWT.create()
         .withIssuer("ola")
         .withSubject(company.getCnpj().toString())

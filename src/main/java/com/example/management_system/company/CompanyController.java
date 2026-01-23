@@ -46,7 +46,7 @@ public class CompanyController {
     @PostMapping("/job")
     public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO job, HttpServletRequest request) {
         try {
-            var id = request.getAttribute("company");
+            var id = request.getAttribute("token");
             var jobEntity = JobEntity.builder().benefits(job.getBenefit()).level(job.getLevel()).description(job.getDescrpition()).companyCnpj(id.toString()).build();
 
             var result = this.jobService.create(jobEntity);
@@ -64,7 +64,7 @@ public class CompanyController {
     @PostMapping("/auth")
     public ResponseEntity<Object> auth(@RequestBody  AuthCompanyDTO authCompanyDTO) {
         try{
-            var result = this.companyService.execute(authCompanyDTO);
+            var result = this.companyService.auth(authCompanyDTO);
             return ResponseEntity.ok().body(result);
         }catch( UsernameNotFoundException e){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(e.getMessage());

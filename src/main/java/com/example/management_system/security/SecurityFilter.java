@@ -22,22 +22,31 @@ import lombok.val;
 
 @Component
 public class SecurityFilter extends OncePerRequestFilter {
-    // @Override
     @Value("${security.token.secret}")
-    private String key;
+    private String keyCompany;
 
+    @Value("${security.token.secret.candidate}")
+    private String keyCandidate;
+
+    @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         SecurityContextHolder.getContext().setAuthentication(null);
 
         String header = request.getHeader("Authorization");
         if (header != null) {
-            var subjectToken = this.validadeToken(header);
+            String key = null;
+            if (request.getRequestURL().toString().contains("company")) {
+                key = keyCompany;
+            } else if (request.getRequestURL().toString().contains("candidate")) {
+                key = keyCandidate;
+            }
+            var subjectToken = this.validateToken(header, key);
             if (subjectToken.isEmpty()) {
                 response.setStatus((HttpServletResponse.SC_UNAUTHORIZED));
                 return;
             }
-            request.setAttribute("company", subjectToken);
+            request.setAttribute("token", subjectToken);
             UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null,
                     Collections.emptyList());
             SecurityContextHolder.getContext().setAuthentication(auth);
@@ -49,7 +58,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    public String validadeToken(String token) {
+    public String validateToken(String token, String key) {
         token = token.replace("Bearer ", "");
 
         var algorithm = Algorithm.HMAC256(key); // garantir que key não é null
