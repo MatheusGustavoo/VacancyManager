@@ -54,14 +54,13 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         // throw new UnsupportedOperationException("Unimplemented method
         // 'doFilterInternal'");
-        System.out.println(header);
         filterChain.doFilter(request, response);
     }
 
     public String validateToken(String token, String key) {
         token = token.replace("Bearer ", "");
 
-        var algorithm = Algorithm.HMAC256(key); // garantir que key não é null
+        var algorithm = Algorithm.HMAC256(key);
 
         try {
 

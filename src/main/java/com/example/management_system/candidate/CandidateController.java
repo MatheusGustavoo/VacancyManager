@@ -53,9 +53,9 @@ public class CandidateController {
         try {
         var nameCandidate = request.getAttribute("token");
         var candidateProfile = this.CandidateService.execute(nameCandidate.toString()); 
+        
         return ResponseEntity.ok().body(candidateProfile);
         } catch (Exception e) {
-            // TODO: handle exception
             return ResponseEntity.badRequest().body(e.getMessage());
         }
 
