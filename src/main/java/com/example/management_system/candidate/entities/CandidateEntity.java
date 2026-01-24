@@ -1,4 +1,4 @@
-package com.example.management_system.candidate;
+package com.example.management_system.candidate.entities;
 
 import java.time.LocalDateTime;
 

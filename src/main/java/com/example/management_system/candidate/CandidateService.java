@@ -3,6 +3,7 @@ package com.example.management_system.candidate;
 import java.sql.SQLException;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.example.management_system.candidate.entities.AppliedJobsEntity;
+import com.example.management_system.candidate.entities.CandidateEntity;
 
 @Service
 public class CandidateService {
@@ -65,5 +68,9 @@ public class CandidateService {
         var res = ProfileCandidateDTO.builder().name(candidate.getName()).email(candidate.getEmail()).description(candidate.getDescription()).resume(candidate.getResume()).build();
 
         return res;
+    }
+
+    public Object newApply(AppliedJobsEntity applyJob) {
+        return null;
     }
 }
