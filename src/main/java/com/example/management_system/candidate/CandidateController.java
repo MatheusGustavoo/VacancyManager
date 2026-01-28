@@ -2,14 +2,13 @@ package com.example.management_system.candidate;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.management_system.candidate.entities.CandidateEntity;
+
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.sql.SQLException;
-
-import org.postgresql.util.PSQLException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
