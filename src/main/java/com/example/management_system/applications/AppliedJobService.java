@@ -14,6 +14,8 @@ import com.example.management_system.candidate.CandidateRepository;
 import com.example.management_system.company.repositories.CompanyRepository;
 import com.example.management_system.company.repositories.JobRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class AppliedJobService {
 
@@ -27,9 +29,9 @@ public class AppliedJobService {
     private AppliedJobRepository appliedJobRepository;
 
     public AppliedJobsEntity newApply(String cpf, UUID idJob) {
-        var candidate = candidateRepository.findByCpf(cpf).orElseThrow(() -> new UsernameNotFoundException("CPF inválido"));
+        var candidate = candidateRepository.findByCpf(cpf).orElseThrow(() -> new EntityNotFoundException("CPF inválido"));
 
-        var job = jobRepository.findById(idJob).orElseThrow(() -> new UsernameNotFoundException("Id do Job não encontrado na nossa base de dados"));
+        var job = jobRepository.findById(idJob).orElseThrow(() -> new EntityNotFoundException("Id do Job não encontrado na nossa base de dados"));
 
         
 
