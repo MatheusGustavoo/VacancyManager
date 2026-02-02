@@ -5,7 +5,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import com.example.management_system.candidate.entities.AppliedJobsEntity;
+import com.example.management_system.applications.AppliedJobsEntity;
 import com.example.management_system.candidate.entities.CandidateEntity;
 import com.example.management_system.company.entities.JobEntity;
 import com.example.management_system.company.repositories.JobRepository;
@@ -51,12 +51,12 @@ public class CandidateServiceTest {
 
     @Test
     public void candidate_can_not_apply_job() {
-        var cpf = "123123123";
+        var name = "Matheus";
         var idJob = UUID.randomUUID();
 
-        var applyJob = AppliedJobsEntity.builder().idCandidate(cpf).idJob(idJob).build();
+        var applyJob = AppliedJobsEntity.builder().nameCandidate(name).idJob(idJob).build();
 
-        when(candidateRepository.findByCpf(cpf)).thenReturn(Optional.of(new CandidateEntity()));
+        when(candidateRepository.findByName(name)).thenReturn(Optional.of(new CandidateEntity()));
         when(jobRepository.findById(idJob)).thenReturn(Optional.of(new JobEntity())); 
         
         var idOperation = candidateService.newApply(applyJob);

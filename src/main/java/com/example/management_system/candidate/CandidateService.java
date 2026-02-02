@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.example.management_system.candidate.entities.AppliedJobsEntity;
+import com.example.management_system.applications.AppliedJobsEntity;
 import com.example.management_system.candidate.entities.CandidateEntity;
 
 @Service
