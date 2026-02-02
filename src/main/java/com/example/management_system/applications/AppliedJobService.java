@@ -26,17 +26,19 @@ public class AppliedJobService {
     @Autowired
     private AppliedJobRepository appliedJobRepository;
 
-    public AppliedJobsEntity newApply(String userName, UUID idJob) {
+    public AppliedJobsEntity newApply(String cpf, UUID idJob) {
+        var candidate = candidateRepository.findByCpf(cpf).orElseThrow(() -> new UsernameNotFoundException("CPF inválido"));
+
         var job = jobRepository.findById(idJob).orElseThrow(() -> new UsernameNotFoundException("Id do Job não encontrado na nossa base de dados"));
 
-        var candidate = candidateRepository.findByName(userName).orElseThrow(() -> new UsernameNotFoundException("Nome do usuário inválido"));
+        
 
-        this.appliedJobRepository.findByIdJobAndNameCandidate(idJob, userName).ifPresent(app -> {
+        this.appliedJobRepository.findByIdJobAndIdCandidate(idJob, cpf).ifPresent(app -> {
             throw new RuntimeException("Candidato ja aplicou para essa vaga");
         });
 
         try {
-            AppliedJobsEntity application = AppliedJobsEntity.builder().nameCandidate(candidate.getName()).idJob(job.getId()).build();
+            AppliedJobsEntity application = AppliedJobsEntity.builder().idCandidate(candidate.getCpf()).idJob(job.getId()).build();
             return appliedJobRepository.save(application);
 
         } catch (Exception e) {

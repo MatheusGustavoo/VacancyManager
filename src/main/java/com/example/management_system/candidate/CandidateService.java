@@ -55,13 +55,13 @@ public class CandidateService {
 
         Algorithm algorithm = Algorithm.HMAC256(key);
 
-        return JWT.create().withIssuer("ola").withSubject(candidate.getName())
+        return JWT.create().withIssuer("ola").withSubject(candidate.getCpf())
                 .withExpiresAt(Instant.now().plus(Duration.ofHours(2))).sign(algorithm);
     }
 
     public ProfileCandidateDTO execute(String name) {
         System.out.println(name);
-        var candidate = this.repository.findByName(name).orElseThrow(() -> {
+        var candidate = this.repository.findByCpf(name).orElseThrow(() -> {
             throw new UsernameNotFoundException("CPF inválido");
         });
 
@@ -70,7 +70,4 @@ public class CandidateService {
         return res;
     }
 
-    public Object newApply(AppliedJobsEntity applyJob) {
-        return null;
-    }
 }

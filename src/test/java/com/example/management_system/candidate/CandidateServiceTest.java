@@ -5,6 +5,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import com.example.management_system.applications.AppliedJobRepository;
+import com.example.management_system.applications.AppliedJobService;
 import com.example.management_system.applications.AppliedJobsEntity;
 import com.example.management_system.candidate.entities.CandidateEntity;
 import com.example.management_system.company.entities.JobEntity;
@@ -19,17 +21,26 @@ public class CandidateServiceTest {
     @InjectMocks
     private CandidateService candidateService;
 
+    @InjectMocks
+    private AppliedJobService appliedJobService;
+
     @Mock
-    private CandidateRepository candidateRepository;
+    private AppliedJobRepository appliedJobRepository;
 
     @Mock
     private JobRepository jobRepository;
+
+
+    @Mock
+    private CandidateRepository candidateRepository;
+    @Mock
+    private AppliedJobsEntity appliedJobsEntity;
 
     @Test
     @DisplayName("candidate_not_found")
     public void candidate_not_found() {
         try {
-            candidateService.newApply(null);
+            appliedJobService.newApply("0101010010101", UUID.randomUUID());
         } catch (Exception e) {
             assertThat(e).isInstanceOf(UsernameNotFoundException.class);
         }
@@ -37,13 +48,11 @@ public class CandidateServiceTest {
 
     @Test
     public void job_not_found() {
-        
-        
         var candidate = new CandidateEntity();
         candidate.setCpf("1321321");
-        when(candidateRepository.findByName("")).thenReturn(Optional.of(candidate));
+        when(candidateRepository.findByCpf("")).thenReturn(Optional.of(candidate));
         try {
-            candidateService.newApply(null);
+            appliedJobService.newApply("", UUID.randomUUID());
         } catch (Exception e) {
             assertThat(e).isInstanceOf(UsernameNotFoundException.class);
         }
@@ -51,15 +60,12 @@ public class CandidateServiceTest {
 
     @Test
     public void candidate_can_not_apply_job() {
-        var name = "Matheus";
+        var cpf = "2321";
         var idJob = UUID.randomUUID();
 
-        var applyJob = AppliedJobsEntity.builder().nameCandidate(name).idJob(idJob).build();
-
-        when(candidateRepository.findByName(name)).thenReturn(Optional.of(new CandidateEntity()));
-        when(jobRepository.findById(idJob)).thenReturn(Optional.of(new JobEntity())); 
+        when(appliedJobRepository.findByIdJobAndIdCandidate(idJob, cpf)).thenReturn(Optional.of(new AppliedJobsEntity()));  
         
-        var idOperation = candidateService.newApply(applyJob);
+        var idOperation = appliedJobService.newApply(cpf, idJob);
 
         assertThat(idOperation).isNotNull();
         assertThat(idOperation).hasFieldOrProperty("id");

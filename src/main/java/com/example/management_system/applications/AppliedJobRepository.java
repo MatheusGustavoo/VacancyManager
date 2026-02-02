@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 
 public interface AppliedJobRepository extends JpaRepository<AppliedJobsEntity, UUID>{
-    Optional<AppliedJobsEntity> findByIdJobAndNameCandidate(UUID idJob, String nameCandidate);
+    Optional<AppliedJobsEntity> findByIdJobAndIdCandidate(UUID idJob, String idCandidate);
 } 

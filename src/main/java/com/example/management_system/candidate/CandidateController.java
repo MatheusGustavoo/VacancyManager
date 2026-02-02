@@ -57,8 +57,8 @@ public class CandidateController {
     @GetMapping("/")
     public ResponseEntity<Object> findAll(HttpServletRequest request) {
         try {
-        var nameCandidate = request.getAttribute("token");
-        var candidateProfile = this.CandidateService.execute(nameCandidate.toString()); 
+        var findByIdJobAndIdCandidate = request.getAttribute("token");
+        var candidateProfile = this.CandidateService.execute(findByIdJobAndIdCandidate.toString()); 
         
         return ResponseEntity.ok().body(candidateProfile);
         } catch (Exception e) {
@@ -71,10 +71,10 @@ public class CandidateController {
     @PostMapping("/apply")
     public ResponseEntity<Object> newJob(@RequestBody ApplyJobDTO body, HttpServletRequest request){
         try {
-            var nameCandidate = request.getAttribute("token");
+            var findByIdJobAndIdCandidate = request.getAttribute("token");
             System.out.println(body.idJob());
-            System.out.println(nameCandidate);
-            var result = this.appliedJobService.newApply(nameCandidate.toString(), body.idJob());
+            System.out.println(findByIdJobAndIdCandidate);
+            var result = this.appliedJobService.newApply(findByIdJobAndIdCandidate.toString(), body.idJob());
             return ResponseEntity.ok().body(result);
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage());
