@@ -2,12 +2,16 @@ package com.example.management_system.candidate;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.management_system.applications.AppliedJobService;
+import com.example.management_system.applications.ApplyJobDTO;
 import com.example.management_system.candidate.entities.CandidateEntity;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +28,9 @@ public class CandidateController {
 
     @Autowired
     private CandidateService CandidateService;
+
+    @Autowired
+    private AppliedJobService appliedJobService;
 
     @PostMapping("/")
     public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidate) {
@@ -50,8 +57,8 @@ public class CandidateController {
     @GetMapping("/")
     public ResponseEntity<Object> findAll(HttpServletRequest request) {
         try {
-        var nameCandidate = request.getAttribute("token");
-        var candidateProfile = this.CandidateService.execute(nameCandidate.toString()); 
+        var findByIdJobAndIdCandidate = request.getAttribute("token");
+        var candidateProfile = this.CandidateService.execute(findByIdJobAndIdCandidate.toString()); 
         
         return ResponseEntity.ok().body(candidateProfile);
         } catch (Exception e) {
@@ -60,4 +67,17 @@ public class CandidateController {
 
     }
 
+
+    @PostMapping("/apply")
+    public ResponseEntity<Object> newJob(@RequestBody ApplyJobDTO body, HttpServletRequest request){
+        try {
+            var findByIdJobAndIdCandidate = request.getAttribute("token");
+            System.out.println(body.idJob());
+            System.out.println(findByIdJobAndIdCandidate);
+            var result = this.appliedJobService.newApply(findByIdJobAndIdCandidate.toString(), body.idJob());
+            return ResponseEntity.ok().body(result);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
 }

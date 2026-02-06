@@ -1,0 +1,52 @@
+package com.example.management_system.applications;
+
+import java.net.http.HttpClient;
+import java.util.UUID;
+
+import javax.management.RuntimeErrorException;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
+
+import com.example.management_system.candidate.CandidateRepository;
+import com.example.management_system.company.repositories.CompanyRepository;
+import com.example.management_system.company.repositories.JobRepository;
+
+import jakarta.persistence.EntityNotFoundException;
+
+@Service
+public class AppliedJobService {
+
+    @Autowired
+    private CandidateRepository candidateRepository;
+
+    @Autowired
+    private JobRepository jobRepository;
+
+    @Autowired
+    private AppliedJobRepository appliedJobRepository;
+
+    public AppliedJobsEntity newApply(String cpf, UUID idJob) {
+        var candidate = candidateRepository.findByCpf(cpf).orElseThrow(() -> new EntityNotFoundException("CPF inválido"));
+
+        var job = jobRepository.findById(idJob).orElseThrow(() -> new EntityNotFoundException("Id do Job não encontrado na nossa base de dados"));
+
+        
+
+        this.appliedJobRepository.findByIdJobAndIdCandidate(idJob, cpf).ifPresent(app -> {
+            throw new RuntimeException("Candidato ja aplicou para essa vaga");
+        });
+
+        try {
+            AppliedJobsEntity application = AppliedJobsEntity.builder().idCandidate(candidate.getCpf()).idJob(job.getId()).build();
+            return appliedJobRepository.save(application);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+}
