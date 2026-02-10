@@ -1,15 +1,23 @@
-  # name: App Tests
-  # on:
-  #   push
-  # jobs:
-  #   sample_app_tests:
-  #     name: "Run Tests Using Jest"
-  #     runs-on: ubuntu-latest
-  #     steps:
-  #       - uses: actions/checkout@v2
-  #       - name: Install dependencies
-  #         working-directory: ch5/sample-app
-  #         run: npm install
-  #       - name: Run tests
-  #         working-directory: ch5/sample-app
-  #         run: npm test
+name: CI - management_system
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Build & tests
+        run: mvn -B clean verify
